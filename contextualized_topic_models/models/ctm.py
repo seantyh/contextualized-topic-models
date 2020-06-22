@@ -392,6 +392,15 @@ class CTM(object):
                 torch.save({'state_dict': self.model.state_dict(),
                             'dcue_dict': self.__dict__}, file)
 
+    def load_from_path(self, model_path):        
+        with open(str(model_path), 'rb') as model_dict:
+            checkpoint = torch.load(model_dict)
+
+        for (k, v) in checkpoint['dcue_dict'].items():
+            setattr(self, k, v)
+        
+        self.model.load_state_dict(checkpoint['state_dict'])
+        
     def load(self, model_dir, epoch):
         """
         Load a previously trained model.
