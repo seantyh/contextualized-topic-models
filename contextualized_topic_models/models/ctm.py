@@ -10,6 +10,7 @@ import torch
 from torch import optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+from tqdm.autonotebook import tqdm
 
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
@@ -148,7 +149,7 @@ class CTM(object):
         train_loss = 0
         samples_processed = 0
 
-        for batch_samples in loader:
+        for batch_samples in tqdm(loader, desc="proc. batch"):
             # batch_size x vocab_size
             X = batch_samples['X']
             X_bert = batch_samples['X_bert']
@@ -369,7 +370,7 @@ class CTM(object):
             format(self.n_components, 0.0, 1 - (1./self.n_components),
                    self.model_type, self.hidden_sizes, self.activation,
                    self.dropout, self.lr, self.momentum,
-                   self.reduce_on_plateau)
+                   self.reduce_on_plateau).replace(" ", "")
         return model_dir
 
     def save(self, models_dir=None):
